@@ -17,9 +17,9 @@ def  get_args():
     return parser.parse_args()
 
 
-def action_authenticate(path):
+def action_authenticate(user,path):
     i = interface.SmartAuthInterface()
-    i.authenticateinterface(path)
+    i.authenticateinterface(user,path)
 
 def action_enroll(path):
     i = interface.SmartAuthInterface()
@@ -28,12 +28,12 @@ def action_enroll(path):
 if __name__ == '__main__':
     global args
     args = get_args()
-    
+
     action = args.action
     if action == 'register':
         print('Registering...')
         action_enroll(args.input)
     elif ((action == 'authenticate') | (action == 'auth')):
         print('Authenticating...')
-        action_authenticate(args.input)
+        action_authenticate(args.input,"authenticate")
     

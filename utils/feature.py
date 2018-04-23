@@ -16,8 +16,10 @@ def process_signal(path_to_signal):
     #   1. remove Silence
     #   2. Reduce Noise
     #   3. extract features
+    print(os.path.abspath(os.curdir))
+    os.chmod(os.curdir,mode=0o777)
     if (os.path.abspath(os.curdir).endswith(path_to_signal)):
-        os.chdir("../")    
+        os.chdir("../")
     abspath=os.path.abspath(path_to_signal)
     if (not os.path.isdir(abspath)):
         print("No enrolled user found!")
@@ -33,7 +35,16 @@ def process_signal(path_to_signal):
         signal=filter.remove_silence(fs,signal) #1 Remove Silence
         signal=filter.reduce_noise(fs,signal) #2 Reduce Noise
         features = get_spectral_features(fs,signal) #3 Extract features
-    return (path_to_signal,features)
+    return path_to_signal, features
+
+def get_signal(user,dir):
+    wav="{0}/{1}/{2}/recording2.wav".format(os.path.abspath(os.curdir),user,dir)
+    fs, signal = wavfile.read(wav)
+    assert len(signal.shape) == 1, "Only Support Mono Wav File!"
+    signal = filter.remove_silence(fs, signal)  # 1 Remove Silence
+    signal = filter.reduce_noise(fs, signal)  # 2 Reduce Noise
+    features = get_spectral_features(fs, signal)  # 3 Extract features
+    return (user,features)
         
 def convert_audio_to_mono(signal):
     return librosa.to_mono(signal)
@@ -57,7 +68,9 @@ def get_spectral_features(fs,signal):
 
 def get_mfcc(signal):
     signal=monoform(signal)
-    return librosa.feature.mfcc(signal,sr=SAMPLING_RATE,n_mels=128,fmax=8000,n_mfcc=40)
+    mfcc = np.mean(librosa.feature.mfcc(signal,sr=SAMPLING_RATE,n_mels=128,fmax=8000,n_mfcc=40).T,axis=0,keepdims=True)
+    # print ("MFCC shape:{}".format(mfcc.shape))
+    return mfcc.T
 
 def get_spectral_centroid(signal):
     signal=monoform(signal)
