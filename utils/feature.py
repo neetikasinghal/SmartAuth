@@ -64,7 +64,8 @@ def get_spectral_features(fs,signal):
     #print("Spectral centroid Shape: {0}".format(spectral_centroid.shape))
     #print("Chroma stft Shape: {0}".format(chroma_stft.shape))
 #    return np.concatenate((mfcc),axis=1)
-    return mfcc
+    mel = get_mel_spectrogram(signal)
+    return np.concatenate((mfcc, mel), axis=0)
 
 def get_mfcc(signal):
     signal=monoform(signal)
@@ -80,3 +81,13 @@ def get_spectral_centroid(signal):
 def get_chroma(signal):
     signal=monoform(signal)
     return librosa.feature.chroma_stft(y=signal, sr=SAMPLING_RATE)
+
+def get_mel_spectrogram(signal):
+    signal = monoform(signal)
+    D = np.abs(librosa.stft(signal))**2
+    orig_mel=librosa.feature.melspectrogram(S=D)
+    mel = np.mean(orig_mel.T,axis=0,keepdims=True)
+    # print ("Mel Spectrogram orig shape:{}".format(orig_mel.shape))
+    # print ("Mel Spectrogram shape:{}".format(mel.shape))
+    # print ("Mel Spectrogram T shape:{}".format(mel.T.shape))
+    return mel.T
