@@ -25,6 +25,10 @@ def action_enroll(path):
     i = interface.SmartAuthInterface()
     i.enrollinterface(path)
 
+def action_initialize():
+    i = interface.SmartAuthInterface()
+    i.initialize()
+
 if __name__ == '__main__':
     global args
     args = get_args()
@@ -36,4 +40,7 @@ if __name__ == '__main__':
     elif ((action == 'authenticate') | (action == 'auth')):
         print('Authenticating...')
         action_authenticate(args.input,"authenticate")
+    elif((action=='setup')):
+        print("Initializing the UBM...")
+        action_initialize()
     

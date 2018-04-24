@@ -1,5 +1,7 @@
 import os
 from time import sleep
+import glob
+import numpy as np
 
 from utils import feature
 from utils import fileread
@@ -21,7 +23,6 @@ class SmartAuthInterface(object):
         authfolder="{0}/{1}/".format(user,dir)
         # print(authfolder)
         user_features=feature.get_signal(user,dir)
-        print(user_features[1].shape)
         m = model.GMMmodel()
         m.validate_model(user_features[0],user_features[1])
         # m.validate_model_all(user_features[0],user_features[1])
@@ -74,3 +75,30 @@ class SmartAuthInterface(object):
         sample_rate, samples = fileread.read_wav(path_to_file)
         freq,time,spect = fileread.get_spectrogram(sample_rate,samples)
         fileread.show_spectrogram(freq,time,spect)
+
+    def initialize(self):
+        DATASET = "bin/dataset"
+        MODELS = "bin/models"
+        m = model.GMMmodel()
+        directories = glob.glob(os.path.abspath(os.curdir) + "/" + DATASET + "/*")
+        data = []
+        target = []
+        if not os.path.isdir(os.path.abspath(os.curdir) + "/" + MODELS):
+            os.mkdir(MODELS, mode=0o777)
+
+        for dir in directories:
+            dirsplit = dir.split('/')
+            name = dirsplit[len(dirsplit) - 1].split('-')[0]
+            name = dirsplit[len(dirsplit) - 1]
+            print(name)
+
+            features = np.asarray(())
+            wavs = glob.glob(dir + "/wav/*.wav")
+            if len(wavs) > 0:
+                for wav in wavs:
+                    vector = feature.get_features(wav)
+                    if features.size == 0:
+                        features = vector
+                    else:
+                        features = np.vstack((features, vector))
+                m.development_model(features,MODELS,name)

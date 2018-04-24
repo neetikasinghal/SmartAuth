@@ -20,7 +20,7 @@ class NoiseFilter(object):
         signal = self.monoform(signal)
         wavfile.write(fname, fs, signal)
         fname_clean = "/tmp/tmp{0}-clean.wav".format(rand)
-        os.system("sox {0} {1} noisered {2} {3}".format(fname, fname_clean,NOISE_MODEL,THRES))
+        os.system("sox -v 0.99 {0} {1} noisered {2} {3}".format(fname, fname_clean,NOISE_MODEL,THRES))
         fs, signal = wavfile.read(fname_clean)
         signal = self.monoform(signal)
         os.remove(fname)

@@ -28,22 +28,24 @@ def process_signal(path_to_signal):
     wavs = glob.glob(abspath + '/*.wav')
     if len(wavs) == 0:
         print("No wav file found in {0}".format(abspath))
-    print("Enrolled User {0} has files {1}".format(label, ','.join(wavs)))
+    print("Enrolled User {0}".format(label))
+    features = np.asarray(())
     for wav in wavs:
-        fs,signal = wavfile.read(wav)
-        assert len(signal.shape) == 1, "Only Support Mono Wav File!"
-        signal=filter.remove_silence(fs,signal) #1 Remove Silence
-        signal=filter.reduce_noise(fs,signal) #2 Reduce Noise
-        features = get_spectral_features(fs,signal) #3 Extract features
+        vector=get_features(wav)
+        if features.size == 0:
+            features = vector
+        else:
+            features = np.concatenate((features, vector),axis=0)
     return path_to_signal, features
 
 def get_signal(user,dir):
     wav="{0}/{1}/{2}/recording2.wav".format(os.path.abspath(os.curdir),user,dir)
-    fs, signal = wavfile.read(wav)
-    assert len(signal.shape) == 1, "Only Support Mono Wav File!"
-    signal = filter.remove_silence(fs, signal)  # 1 Remove Silence
-    signal = filter.reduce_noise(fs, signal)  # 2 Reduce Noise
-    features = get_spectral_features(fs, signal)  # 3 Extract features
+    # fs, signal = wavfile.read(wav)
+    # assert len(signal.shape) == 1, "Only Support Mono Wav File!"
+    # signal = filter.remove_silence(fs, signal)  # 1 Remove Silence
+    # signal = filter.reduce_noise(fs, signal)  # 2 Reduce Noise
+    # features = get_spectral_features(fs, signal)  # 3 Extract features
+    features = get_features(wav)
     return (user,features)
         
 def convert_audio_to_mono(signal):
@@ -91,3 +93,12 @@ def get_mel_spectrogram(signal):
     # print ("Mel Spectrogram shape:{}".format(mel.shape))
     # print ("Mel Spectrogram T shape:{}".format(mel.T.shape))
     return mel.T
+
+def get_features(file):
+    fs, signal = wavfile.read(file)
+    assert len(signal.shape) == 1, "Only Support Mono Wav File!"
+    signal = filter.remove_silence(fs, signal)  # 1 Remove Silence
+    signal = filter.reduce_noise(fs, signal)  # 2 Reduce Noise
+    vector = get_spectral_features(fs, signal)  # 3 Extract features
+    return vector.T
+
