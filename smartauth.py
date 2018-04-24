@@ -3,16 +3,14 @@ import argparse
 from utils import interface
 
 def  get_args():
-    epilog = """
-    Enter the text that you want to display
-    """
-    parser = argparse.ArgumentParser(description="Smart Authenticator", epilog=epilog,
+
+    parser = argparse.ArgumentParser(description="Smart Authenticator",
                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-a', '--action',
-                       help='Use register to Register a new user or authenticate to Authenticate an existing user',
+                       help=' \'register\' a new user or \'authenticate\' an existing user',
                        required=True)
     parser.add_argument('-i', '--input',
-                       help='The folder path / path to the file for the input signals',
+                       help='username',
                        required=True)
     return parser.parse_args()
 
