@@ -2,10 +2,7 @@ import os
 
 import dill as pickle
 import numpy as np
-import glob
 from sklearn.mixture import GaussianMixture as GMM
-import scipy.io.wavfile as wavfile
-
 
 class GMMmodel(object):
 
