@@ -2,4 +2,5 @@ pip install librosa
 brew install portaudio
 pip install pyaudio
 pip install dill
+brew install sox
 pip install sox

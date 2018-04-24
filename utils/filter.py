@@ -44,5 +44,6 @@ def remove_silence(fs, signal,
 
 def reduce_noise(fs,signal):
     noise_red = reducenoise.NoiseFilter()
+    noise_red.init_noise(fs, signal)
     return noise_red.filter(fs,signal)
 
