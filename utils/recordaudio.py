@@ -16,11 +16,9 @@ RATE = 44100
 
     
 def check_if_silent(snd_data):
-    "Checks if it is below the threshold"
     return max(snd_data) < THRESHOLD
 
 def normalize(snd_data):
-    "Make the volume to average"
     MAXIMUM = 16384
     times = float(MAXIMUM)/max(abs(i) for i in snd_data)
     r = array('h')
@@ -53,15 +51,6 @@ def trim(snd_data):
     return snd_data
 
 def record():
-    """
-    Record a word or words from the microphone and 
-    return the data as an array of signed shorts.
-
-    Normalizes the audio, trims silence from the 
-    start and end, and pads with 0.5 seconds of 
-    blank sound to make sure VLC et al can play 
-    it without getting chopped off.
-    """
     p = pyaudio.PyAudio()
     stream = p.open(format=FORMAT, channels=1, rate=RATE,
         input=True, output=True,
@@ -104,7 +93,6 @@ def record():
     return sample_width, r
 
 def record_to_file(path):
-    "Records and outputs the resulting data to 'path'"
     sample_width, data = record()
     data = pack('<' + ('h'*len(data)), *data)
 
@@ -117,17 +105,6 @@ def record_to_file(path):
 
 # Print  progress
 def printProgress (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
-    """
-    Prints a progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-    """
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)

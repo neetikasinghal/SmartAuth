@@ -21,11 +21,9 @@ class SmartAuthInterface(object):
 
     def authenticateModelling(self,user,dir):
         authfolder="{0}/{1}/".format(user,dir)
-        # print(authfolder)
         user_features=feature.get_signal(user,dir)
         m = model.GMMmodel()
         m.validate_model(user_features[0],user_features[1])
-        # m.validate_model_all(user_features[0],user_features[1])
 
 
     def enrollModelling(self,dir):
@@ -90,7 +88,7 @@ class SmartAuthInterface(object):
             dirsplit = dir.split('/')
             name = dirsplit[len(dirsplit) - 1].split('-')[0]
             name = dirsplit[len(dirsplit) - 1]
-            print(name)
+            print("Learning:",name)
 
             features = np.asarray(())
             wavs = glob.glob(dir + "/wav/*.wav")

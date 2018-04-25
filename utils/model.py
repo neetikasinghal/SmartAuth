@@ -14,7 +14,7 @@ class GMMmodel(object):
         picklefile = "{0}/{1}{2}.gmm".format(os.path.abspath(os.curdir), dest, user)
         with open(picklefile, 'wb') as f:
             pickle.dump(gmm,f)
-        print ('+ modeling completed for speaker:', picklefile, " with data point = ", features.shape)
+        # print ('- learning speaker:', picklefile, " with data point = ", features.shape)
 
 
     def validate_model(self,user,features):
@@ -35,7 +35,12 @@ class GMMmodel(object):
             log_likelihood[i] = scores.sum()
 
         winner = np.argmax(log_likelihood)
-        print ("\tidentified as - ", speakers[winner],"with score ",winner)
+        if (speakers[winner]==user):
+            print("\nWelcome {} !! Have a good day!".format(user))
+            print("\n")
+        else:
+            print ("\nSorry! We couldn't identify you. Have you registered? If yes, please try authenticating once again")
+            print("\n")
 
     def development_model(self,features,models,name):
         gmm = GMM(n_components=2, covariance_type='full',n_init=3)
@@ -44,5 +49,5 @@ class GMMmodel(object):
         with open(picklefile, 'wb') as f:
            pickle.dump(gmm, f)
 
-        print ('+ modeling completed for speaker:', name, 'with gmm ', picklefile)
+        print ('- development modeling completed for :', name, 'with gmm ', picklefile)
 

@@ -16,7 +16,6 @@ def process_signal(path_to_signal):
     #   1. remove Silence
     #   2. Reduce Noise
     #   3. extract features
-    print(os.path.abspath(os.curdir))
     os.chmod(os.curdir,mode=0o777)
     if (os.path.abspath(os.curdir).endswith(path_to_signal)):
         os.chdir("../")
@@ -28,7 +27,7 @@ def process_signal(path_to_signal):
     wavs = glob.glob(abspath + '/*.wav')
     if len(wavs) == 0:
         print("No wav file found in {0}".format(abspath))
-    print("Enrolled User {0}".format(label))
+    print("\nWelcome {0} ! you are registered successfully!\n".format(label))
     features = np.asarray(())
     for wav in wavs:
         vector=get_features(wav)
@@ -40,11 +39,6 @@ def process_signal(path_to_signal):
 
 def get_signal(user,dir):
     wav="{0}/{1}/{2}/recording2.wav".format(os.path.abspath(os.curdir),user,dir)
-    # fs, signal = wavfile.read(wav)
-    # assert len(signal.shape) == 1, "Only Support Mono Wav File!"
-    # signal = filter.remove_silence(fs, signal)  # 1 Remove Silence
-    # signal = filter.reduce_noise(fs, signal)  # 2 Reduce Noise
-    # features = get_spectral_features(fs, signal)  # 3 Extract features
     features = get_features(wav)
     return (user,features)
         
@@ -60,19 +54,12 @@ def monoform(signal):
 def get_spectral_features(fs,signal):
     signal=writetmp.getWavSignal(fs,signal)
     mfcc = get_mfcc(signal)
-    spectral_centroid = get_spectral_centroid(signal)
-    chroma_stft = get_chroma(signal)
-    #print("MFCC Shape: {0}".format(mfcc.shape))
-    #print("Spectral centroid Shape: {0}".format(spectral_centroid.shape))
-    #print("Chroma stft Shape: {0}".format(chroma_stft.shape))
-#    return np.concatenate((mfcc),axis=1)
     mel = get_mel_spectrogram(signal)
     return np.concatenate((mfcc, mel), axis=0)
 
 def get_mfcc(signal):
     signal=monoform(signal)
     mfcc = np.mean(librosa.feature.mfcc(signal,sr=SAMPLING_RATE,n_mels=128,fmax=8000,n_mfcc=40).T,axis=0,keepdims=True)
-    # print ("MFCC shape:{}".format(mfcc.shape))
     return mfcc.T
 
 def get_spectral_centroid(signal):
@@ -89,9 +76,6 @@ def get_mel_spectrogram(signal):
     D = np.abs(librosa.stft(signal))**2
     orig_mel=librosa.feature.melspectrogram(S=D)
     mel = np.mean(orig_mel.T,axis=0,keepdims=True)
-    # print ("Mel Spectrogram orig shape:{}".format(orig_mel.shape))
-    # print ("Mel Spectrogram shape:{}".format(mel.shape))
-    # print ("Mel Spectrogram T shape:{}".format(mel.T.shape))
     return mel.T
 
 def get_features(file):
