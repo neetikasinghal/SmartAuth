@@ -62,7 +62,7 @@ def record():
     r = array('h')
 
     now = time.time()
-    future = now + 20
+    future = now + 10
     while time.time() < future:
         # little endian, signed short
         snd_data = array('h', stream.read(CHUNK_SIZE))
@@ -131,7 +131,7 @@ def getsentence(n):
         print ("")
 
 def record_multiple_times(n):
-    items = list(range(0, 57))
+    items = list(range(0, 10))
     l = len(items)
     getsentence(n)
     printProgress(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)

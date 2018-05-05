@@ -3,10 +3,13 @@ import os
 import dill as pickle
 import numpy as np
 from sklearn.mixture import GaussianMixture as GMM
+import time
 
 class GMMmodel(object):
 
     def generate_model(self, user, features):
+        current_milli_time = lambda: int(round(time.time() * 1000))
+        beforetime = current_milli_time()
         dest = "bin/models/"
         dir = "{0}{1}{2}".format(os.path.abspath(os.curdir), "/",dest)
         gmm = GMM(n_components=2, covariance_type='full', n_init=3)
@@ -15,9 +18,13 @@ class GMMmodel(object):
         with open(picklefile, 'wb') as f:
             pickle.dump(gmm,f)
         # print ('- learning speaker:', picklefile, " with data point = ", features.shape)
+        aftertime = current_milli_time()
+        print("Time taken to create speaker model: ",aftertime-beforetime," ms")
 
 
     def validate_model(self,user,features):
+        current_milli_time = lambda: int(round(time.time() * 1000))
+        beforetime = current_milli_time()
         modelpath = os.path.abspath(os.curdir) + "/bin/models/"
         gmm_files = [os.path.join(modelpath, fname) for fname in os.listdir(modelpath) if fname.endswith('.gmm')]
         models = []
@@ -41,6 +48,8 @@ class GMMmodel(object):
         else:
             print ("\nSorry! We couldn't identify you. Have you registered? If yes, please try authenticating once again")
             print("\n")
+        aftertime = current_milli_time()
+        print("Time taken to verify speaker : ", aftertime - beforetime," ms")
 
     def development_model(self,features,models,name):
         gmm = GMM(n_components=2, covariance_type='full',n_init=3)
