@@ -5,6 +5,7 @@ import sys
 import librosa
 import numpy as np
 import scipy.io.wavfile as wavfile
+import time
 
 from utils import filter
 from utils import writetmp
@@ -16,6 +17,8 @@ def process_signal(path_to_signal):
     #   1. remove Silence
     #   2. Reduce Noise
     #   3. extract features
+    current_milli_time = lambda: int(round(time.time() * 1000))
+    beforetime = current_milli_time()
     os.chmod(os.curdir,mode=0o777)
     if (os.path.abspath(os.curdir).endswith(path_to_signal)):
         os.chdir("../")
@@ -35,11 +38,17 @@ def process_signal(path_to_signal):
             features = vector
         else:
             features = np.concatenate((features, vector),axis=0)
+    aftertime = current_milli_time()
+    print("Time taken to extract features: ",aftertime-beforetime," ms")
     return path_to_signal, features
 
 def get_signal(user,dir):
+    current_milli_time = lambda: int(round(time.time() * 1000))
+    beforetime = current_milli_time()
     wav="{0}/{1}/{2}/recording2.wav".format(os.path.abspath(os.curdir),user,dir)
     features = get_features(wav)
+    aftertime = current_milli_time()
+    print("Time taken to extract features: ", aftertime-beforetime," ms")
     return (user,features)
         
 def convert_audio_to_mono(signal):

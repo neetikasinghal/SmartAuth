@@ -38,19 +38,19 @@ class SmartAuthInterface(object):
         
         sleep(1)
         print ("You are about to start enrollment.....")
-        sleep(5)
+        sleep(1)
         print ("Read the below text to start...")
-        sleep(5)
+        sleep(1)
         recordaudio.record_multiple_times(1)
         print ("We want to identify you accurately... Lets try one more time..")
-        sleep(1)
+        # sleep(1)
         print ("Read the below text to start...")
-        sleep(2)
+        sleep(1)
         recordaudio.record_multiple_times(2)
         print ("Now, this is final and we are done !!")
-        sleep(1)
+        # sleep(1)
         print ("Read the below text to start...")
-        sleep(2)
+        sleep(1)
         recordaudio.record_multiple_times(3)
 
     def authRecording(self, user,dir):
@@ -62,9 +62,9 @@ class SmartAuthInterface(object):
 
         sleep(1)
         print ("Welcome...")
-        sleep(5)
+        # sleep(1)
         print ("Read the below text to authenticate...")
-        sleep(5)
+        sleep(1)
         recordaudio.record_multiple_times(2)
         
         os.chdir(curdir)
