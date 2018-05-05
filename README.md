@@ -20,6 +20,8 @@ This feature vector is then used to train the Gaussian Mixture Model(GMM).
 Dataset: SmartAuth uses 950 samples from open-source VoxForge.
 Testing samples comprise of 30 samples comprising the real-time voices collected by us.
 
-Accuracy:
+Accuracy: 83%
 
-Technology Stack:
+Technology Stack: Python, Librosa, Sox, Scikit-learn
+
+Run: To run the project, follow the setup.sh.
