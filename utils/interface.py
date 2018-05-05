@@ -16,15 +16,34 @@ class SmartAuthInterface(object):
         self.enrollModelling(dir)
     
     def authenticateinterface(self,user,dir):
+        print ("Welcome...")
         self.authRecording(user,dir)
-        self.authenticateModelling(user,dir)
+        validation_1=self.authenticateModelling(user,dir)
+        validation = validation_1
+        count=0
+        while(not validation) & (count!=2):
+            print ("\nI am finding it a bit hard today to hear you. Can you try once again?")
+            print("\n")
+            self.authRecording(user, dir)
+            validation = self.authenticateModelling(user, dir)
+            count=count+1
+            if validation:
+                break
+
+        if validation:
+            print("\nWelcome {} !! Have a good day!".format(user))
+            print("\n")
+        else:
+            print ("\nSorry! We couldn't identify you. Have you registered?")
+            print("\n")
+
 
     def authenticateModelling(self,user,dir):
         authfolder="{0}/{1}/".format(user,dir)
         user_features=feature.get_signal(user,dir)
         m = model.GMMmodel()
-        m.validate_model(user_features[0],user_features[1])
-
+        validation = m.validate_model(user_features[0],user_features[1])
+        return validation
 
     def enrollModelling(self,dir):
         user_features=feature.process_signal(dir)
@@ -60,9 +79,6 @@ class SmartAuthInterface(object):
             os.makedirs(authfolder)
         os.chdir(authfolder)
 
-        sleep(1)
-        print ("Welcome...")
-        # sleep(1)
         print ("Read the below text to authenticate...")
         sleep(1)
         recordaudio.record_multiple_times(2)
