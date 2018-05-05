@@ -42,14 +42,15 @@ class GMMmodel(object):
             log_likelihood[i] = scores.sum()
 
         winner = np.argmax(log_likelihood)
-        if (speakers[winner]==user):
-            print("\nWelcome {} !! Have a good day!".format(user))
-            print("\n")
-        else:
-            print ("\nSorry! We couldn't identify you. Have you registered? If yes, please try authenticating once again")
-            print("\n")
+        # if (speakers[winner]==user):
+        #     print("\nWelcome {} !! Have a good day!".format(user))
+        #     print("\n")
+        # else:
+        #     print ("\nSorry! We couldn't identify you. Have you registered? If yes, please try authenticating once again")
+        #     print("\n")
         aftertime = current_milli_time()
         print("Time taken to verify speaker : ", aftertime - beforetime," ms")
+        return speakers[winner]==user
 
     def development_model(self,features,models,name):
         gmm = GMM(n_components=2, covariance_type='full',n_init=3)
